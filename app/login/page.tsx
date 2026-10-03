@@ -1,6 +1,8 @@
+import { redirect } from "next/navigation";
 import { buildMetadata } from "@/lib/metadata";
-import { LoginForm } from "@/app/login/LoginForm";
-import { Logo } from "@/components/ui/Logo";
+import { PhoneLoginForm } from "@/app/login/PhoneLoginForm";
+import { AuthCard, Notice } from "@/components/auth/AuthCard";
+import { getCurrentUser } from "@/lib/auth/session";
 
 export const metadata = buildMetadata({
   title: "Login",
@@ -8,21 +10,25 @@ export const metadata = buildMetadata({
   path: "/login",
 });
 
-export default function LoginPage() {
+const notices = {
+  loggedOut: "You've been logged out.",
+  expired: "Your session has expired. Please log in again.",
+} as const;
+
+export default async function LoginPage({ searchParams }: PageProps<"/login">) {
+  if (await getCurrentUser()) redirect("/dashboard");
+
+  const params = await searchParams;
+  const notice = (Object.keys(notices) as (keyof typeof notices)[]).find((k) => params[k] === "1");
+
   return (
-    <section className="flex min-h-[calc(100vh-64px)] items-center justify-center bg-brand-light px-4 py-16">
-      <div className="w-full max-w-md rounded-2xl border border-brand-border bg-white p-8 shadow-lg shadow-brand-navy/5 sm:p-10">
-        <div className="flex justify-center">
-          <Logo />
+    <AuthCard title="Log in to your account" subtitle="Access your payments dashboard, API keys and transaction reports.">
+      {notice && (
+        <div className="mb-5">
+          <Notice tone={notice === "expired" ? "info" : "success"}>{notices[notice]}</Notice>
         </div>
-        <h1 className="mt-6 text-center text-2xl font-bold text-text-primary">Log in to your account</h1>
-        <p className="mt-2 text-center text-sm text-text-secondary">
-          Access your payments dashboard, API keys and transaction reports.
-        </p>
-        <div className="mt-8">
-          <LoginForm />
-        </div>
-      </div>
-    </section>
+      )}
+      <PhoneLoginForm />
+    </AuthCard>
   );
 }

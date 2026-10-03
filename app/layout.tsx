@@ -3,6 +3,7 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { HideInApp } from "@/components/layout/HideInApp";
 import { SITE_NAME, SITE_URL } from "@/lib/metadata";
 
 const inter = Inter({
@@ -29,7 +30,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}>
+    <html lang="en" data-scroll-behavior="smooth" className={`${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col font-sans">
         <a
           href="#main-content"
@@ -37,11 +38,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         >
           Skip to content
         </a>
-        <Header />
+        <HideInApp>
+          <Header />
+        </HideInApp>
         <main id="main-content" className="flex-1">
           {children}
         </main>
-        <Footer />
+        <HideInApp>
+          <Footer />
+        </HideInApp>
       </body>
     </html>
   );
