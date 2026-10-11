@@ -10,14 +10,11 @@ import { parseDemoSession, readDemoSessionRaw, saveDemoSession, type AepsProfile
 import { DEFAULT_DASHBOARD_PATH } from "@/lib/data/dashboardNav";
 import { OtpDialog } from "./OtpDialog";
 
-/** PROTOTYPE: set to true to print the expected OTP (the account's defaultOTP) inside the modal. */
+/** PROTOTYPE: set to true to print the expected OTP (the SMS code) inside the modal. */
 const SHOW_DEMO_OTP = false;
 
-/** PROTOTYPE: pre-fill the OTP boxes with the account's defaultOTP, so login is Verify-only. */
-const PREFILL_DEFAULT_OTP = false;
-
 type CredentialErrors = { phoneNumber?: string; password?: string };
-/** `otp` is the default code (pre-filled); `acceptedOtps` also holds the SMS code — either one logs in. */
+/** `otp` is the code sent to the customer by SMS — the only one that logs in. */
 type PendingLogin = { otp: string; acceptedOtps: string[]; profile: AepsProfile };
 
 export function LoginForm() {
@@ -127,7 +124,6 @@ export function LoginForm() {
           phone={phoneNumber}
           length={pending.otp.length}
           demoOtp={SHOW_DEMO_OTP ? pending.otp : undefined}
-          prefill={PREFILL_DEFAULT_OTP ? pending.otp : undefined}
           onVerify={handleVerify}
           onResend={requestOtp}
           onClose={() => setPending(null)}
