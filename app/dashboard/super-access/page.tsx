@@ -1,10 +1,10 @@
 import { buildMetadata } from "@/lib/metadata";
 import { AdminOnly } from "@/components/dashboard/AdminOnly";
-import { ApiBalanceView } from "@/components/dashboard/ApiBalanceView";
+import { SuperAccessOverview } from "@/components/dashboard/SuperAccessOverview";
 
 export const metadata = buildMetadata({
   title: "Super Access",
-  description: "BUL account balances in your NammaAPI dashboard.",
+  description: "BUL balances and the PG tally in your NammaAPI dashboard.",
   path: "/dashboard/super-access",
   noIndex: true,
 });
@@ -12,7 +12,7 @@ export const metadata = buildMetadata({
 export default function Page() {
   return (
     <AdminOnly role="superAccess">
-      <ApiBalanceView bulOnly />
+      <SuperAccessOverview />
     </AdminOnly>
   );
 }

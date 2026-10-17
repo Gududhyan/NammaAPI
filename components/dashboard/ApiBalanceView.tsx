@@ -201,7 +201,7 @@ export function ApiBalanceView({ bulOnly = false }: { bulOnly?: boolean }) {
 
           {bulAccounts.length > 0 && (
             <div className="flex flex-auto flex-wrap gap-x-2.5 gap-y-2 rounded-xl border border-brand-border bg-white px-3 py-2 min-[1680px]:gap-x-4 min-[1680px]:px-4">
-              <div>
+              <div className="w-full sm:w-auto">
                 <p className="text-[11px] font-semibold uppercase tracking-wider text-text-secondary">BUL total</p>
                 <p className={cn("mt-0.5 text-base font-bold tabular-nums", "text-text-primary")}>{inr(bulTotal)}</p>
                 <p className="text-[11px] text-text-secondary">
@@ -209,9 +209,15 @@ export function ApiBalanceView({ bulOnly = false }: { bulOnly?: boolean }) {
                 </p>
               </div>
               {bulAccounts.map((account) => (
-                <div key={account.key} className="flex-1 border-l border-brand-border pl-2.5 min-[1680px]:pl-4">
-                  <p className="font-mono text-[11px] font-semibold text-text-secondary">{account.label}</p>
-                  <p className={cn("mt-0.5 text-base font-bold tabular-nums", "text-text-primary")}>{inr(account.amount)}</p>
+                <div
+                  key={account.key}
+                  className="w-full border-t border-brand-border pt-2 sm:w-auto sm:flex-1 sm:border-l sm:border-t-0 sm:pl-2.5 sm:pt-0 min-[1680px]:pl-4"
+                >
+                  {/* Phones: name and amount on one line, one account per row. */}
+                  <div className="flex items-baseline justify-between gap-3 sm:block">
+                    <p className="font-mono text-[11px] font-semibold text-text-secondary">{account.label}</p>
+                    <p className={cn("text-base font-bold tabular-nums sm:mt-0.5", "text-text-primary")}>{inr(account.amount)}</p>
+                  </div>
                   {/* Share of the BUL total. */}
                   <ShareBar share={bulTotal > 0 ? (account.amount / bulTotal) * 100 : 0} />
                 </div>

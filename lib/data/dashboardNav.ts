@@ -54,7 +54,7 @@ export const dashboardSections = [
   {
     id: "super-access",
     label: "Super Access",
-    description: "BUL account balances.",
+    description: "BUL account balances and the PG tally.",
     role: "superAccess",
   },
 ] as const;

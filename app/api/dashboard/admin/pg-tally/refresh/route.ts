@@ -22,8 +22,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Your session has expired. Please log in again." }, { status: 401 });
   }
   // The trustworthy admin check: from the encrypted session cookie, never from the browser.
-  if (adminAccess(credentials) !== "full") {
-    return NextResponse.json({ error: "This is only available to administrators and accountants." }, { status: 403 });
+  if (adminAccess(credentials) === "none") {
+    return NextResponse.json({ error: "This is only available to administrators, accountants and super access." }, { status: 403 });
   }
 
   const body = (await request.json().catch(() => null)) as Record<string, unknown> | null;
