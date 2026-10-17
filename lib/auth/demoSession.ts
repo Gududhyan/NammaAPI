@@ -18,6 +18,10 @@ export type AepsProfile = {
   cmsBalance: string;
   /** Shows admin-only sidebar sections. UI only — admin APIs must check the session cookie instead. */
   isAdmin?: boolean;
+  /** Accountant: sees the whole Admin page. UI only — admin APIs check the session cookie. */
+  isAccountant?: boolean;
+  /** Super access: sees only the BUL total card on the Admin page. UI only, like `isAdmin`. */
+  isSuperAccess?: boolean;
 };
 
 const STORAGE_KEY = "namma-demo-session";

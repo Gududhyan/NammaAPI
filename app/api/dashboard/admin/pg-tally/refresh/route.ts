@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { checkBpayStatus } from "@/lib/server/aepsAdmin";
 import { getSessionCredentials } from "@/lib/server/session";
+import { adminAccess } from "@/lib/auth/adminAccess";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 
 const RATE_LIMIT = { limit: 30, windowMs: 10 * 60 * 1000 };
@@ -21,8 +22,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Your session has expired. Please log in again." }, { status: 401 });
   }
   // The trustworthy admin check: from the encrypted session cookie, never from the browser.
-  if (!credentials.isAdmin) {
-    return NextResponse.json({ error: "This is only available to administrators." }, { status: 403 });
+  if (adminAccess(credentials) !== "full") {
+    return NextResponse.json({ error: "This is only available to administrators and accountants." }, { status: 403 });
   }
 
   const body = (await request.json().catch(() => null)) as Record<string, unknown> | null;

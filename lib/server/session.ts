@@ -21,6 +21,8 @@ export type SessionCredentials = {
   password: string;
   /** From the vendor's login response. The trustworthy admin check for server routes. */
   isAdmin: boolean;
+  isAccountant: boolean;
+  isSuperAccess: boolean;
 };
 type SessionPayload = SessionCredentials & { exp: number };
 
@@ -73,7 +75,13 @@ export async function getSessionCredentials(): Promise<SessionCredentials | null
   ) {
     return null;
   }
-  return { userName: payload.userName, password: payload.password, isAdmin: payload.isAdmin === true };
+  return {
+    userName: payload.userName,
+    password: payload.password,
+    isAdmin: payload.isAdmin === true,
+    isAccountant: payload.isAccountant === true,
+    isSuperAccess: payload.isSuperAccess === true,
+  };
 }
 
 export async function clearSessionCredentials() {

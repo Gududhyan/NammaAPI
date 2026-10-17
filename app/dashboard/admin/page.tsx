@@ -1,8 +1,5 @@
 import { buildMetadata } from "@/lib/metadata";
-import { AdminOnly } from "@/components/dashboard/AdminOnly";
-import { AdminPanels } from "@/components/dashboard/AdminPanels";
-import { ApiBalanceView } from "@/components/dashboard/ApiBalanceView";
-import { DaySummaryView } from "@/components/dashboard/DaySummaryView";
+import { AdminDashboard } from "@/components/dashboard/AdminDashboard";
 
 export const metadata = buildMetadata({
   title: "Admin",
@@ -12,13 +9,5 @@ export const metadata = buildMetadata({
 });
 
 export default function AdminPage() {
-  return (
-    <AdminOnly>
-      <div className="space-y-4">
-        <ApiBalanceView />
-        <DaySummaryView />
-        <AdminPanels />
-      </div>
-    </AdminOnly>
-  );
+  return <AdminDashboard />;
 }

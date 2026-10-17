@@ -60,7 +60,13 @@ export async function POST(request: Request) {
 
   // Keep the credentials server-side (encrypted httpOnly cookie) for later vendor calls such as
   // the dashboard reports. The response itself never contains the password.
-  await setSessionCredentials({ userName: phone, password, isAdmin: result.profile.isAdmin === true });
+  await setSessionCredentials({
+    userName: phone,
+    password,
+    isAdmin: result.profile.isAdmin === true,
+    isAccountant: result.profile.isAccountant === true,
+    isSuperAccess: result.profile.isSuperAccess === true,
+  });
 
   return NextResponse.json({ ok: true, otp: result.otp, acceptedOtps: result.acceptedOtps, profile: result.profile });
 }

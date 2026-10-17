@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type { ApiLevelBalance } from "@/lib/admin/apiBalance";
+import { isBulAccount, type ApiLevelBalance } from "@/lib/admin/apiBalance";
 import { cn } from "@/lib/cn";
 
 type LoadState =
@@ -30,8 +30,6 @@ const round2 = (n: number) => Math.round(n * 100) / 100;
 
 /** Unsettled / pending balances (the vendor spells one "pendnig"), shown apart from the BUL accounts. */
 const isHeldBalance = (key: string) => /unsettl|pend/i.test(key);
-/** The BUL accounts (`bul_0080` …), grouped inside the BUL total card. */
-const isBulAccount = (key: string) => /^bul/i.test(key);
 /** AEPS balances: the total shares the API wallet's card; IN and OUT share one card. */
 const isAepsTotal = (key: string) => /^aeps[_-]?total$/i.test(key);
 const isAepsInOut = (key: string) => /^aeps[_-]?(in|out)$/i.test(key);
@@ -71,7 +69,7 @@ function RefreshIcon({ spinning }: { spinning: boolean }) {
 }
 
 /** Admin: platform wallet vs the BUL account balances, from the vendor's getapiLevelbalance. */
-export function ApiBalanceView() {
+export function ApiBalanceView({ bulOnly = false }: { bulOnly?: boolean }) {
   const [state, setState] = useState<LoadState>({ status: "loading" });
   const [reloadKey, setReloadKey] = useState(0);
 
@@ -160,6 +158,7 @@ export function ApiBalanceView() {
         // on narrower screens they wrap. Order: Difference, API wallet + AEPS total, BUL total (with the BUL
         // accounts inside), AEPS IN/OUT, then the other balances (RUPE, unsettled, pending).
         <div className="flex flex-wrap gap-1.5 whitespace-nowrap min-[1680px]:gap-2.5">
+          {!bulOnly && (<>
           <div className="flex-auto rounded-xl bg-brand-gradient px-3 py-2 text-white shadow-lg shadow-brand-primary/20 min-[1680px]:px-4">
             <div className="flex items-center justify-between gap-2">
               <p className="text-[11px] font-semibold uppercase tracking-wider text-white/75">Difference</p>
@@ -198,6 +197,8 @@ export function ApiBalanceView() {
             )}
           </div>
 
+          </>)}
+
           {bulAccounts.length > 0 && (
             <div className="flex flex-auto flex-wrap gap-x-2.5 gap-y-2 rounded-xl border border-brand-border bg-white px-3 py-2 min-[1680px]:gap-x-4 min-[1680px]:px-4">
               <div>
@@ -219,7 +220,7 @@ export function ApiBalanceView() {
           )}
 
           {/* AEPS IN and OUT in one card. */}
-          {aepsInOut.length > 0 && (
+          {!bulOnly && aepsInOut.length > 0 && (
             <div className="flex flex-auto rounded-xl border border-brand-border bg-white px-3 py-2 min-[1680px]:px-3.5">
               {aepsInOut.map((account, i) => (
                 <div
@@ -234,7 +235,7 @@ export function ApiBalanceView() {
             </div>
           )}
 
-          {otherAccounts.map((account) => {
+          {(bulOnly ? [] : otherAccounts).map((account) => {
             // Unsettled and pending money isn't in an account yet, so it gets its own (navy) style.
             const held = isHeldBalance(account.key);
             return (

@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState, useSyncExternalStore, type ReactNode } fr
 import { usePathname, useRouter } from "next/navigation";
 import { Logo } from "@/components/ui/Logo";
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
+import { adminAccess } from "@/lib/auth/adminAccess";
 import { ProfileMenu } from "@/components/dashboard/ProfileMenu";
 import { WalletBalances } from "@/components/dashboard/WalletBalances";
 import { parseDemoSession, readDemoSessionRaw, subscribeDemoSession } from "@/lib/auth/demoSession";
@@ -129,7 +130,7 @@ export function DashboardShell({ children }: { children: ReactNode }) {
         >
           <DashboardSidebar
             collapsed={collapsed}
-            isAdmin={profile.isAdmin}
+            isAdmin={adminAccess(profile) !== "none"}
             onToggleCollapse={toggleCollapsed}
             onClose={() => setSidebarHiddenPersisted(true)}
           />
@@ -169,7 +170,7 @@ export function DashboardShell({ children }: { children: ReactNode }) {
               </button>
             </div>
             <div className="min-h-0 flex-1">
-              <DashboardSidebar isAdmin={profile.isAdmin} onNavigate={() => setDrawerOpen(false)} />
+              <DashboardSidebar isAdmin={adminAccess(profile) !== "none"} onNavigate={() => setDrawerOpen(false)} />
             </div>
           </aside>
         </div>

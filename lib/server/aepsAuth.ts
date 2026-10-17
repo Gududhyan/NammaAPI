@@ -26,6 +26,16 @@ type LoginResponse = Partial<
   >
 >;
 
+/** A boolean flag from the response, matched by its normalized name (the vendor's casing varies). */
+function flag(root: Record<string, unknown>, name: string): boolean {
+  for (const [key, value] of Object.entries(root)) {
+    if (key.toLowerCase().replace(/[^a-z0-9]/g, "") !== name) continue;
+    // JSON sends a boolean; the XML form sends the text "true".
+    return value === true || (typeof value === "string" && value.trim().toLowerCase() === "true");
+  }
+  return false;
+}
+
 const text = (value: unknown) =>
   typeof value === "string" ? value.trim() : typeof value === "number" ? String(value) : "";
 
@@ -74,8 +84,9 @@ export async function requestAepsOtp(phone: string, password: string): Promise<A
       aepsBalance: text(root.aepsBalance),
       bbpsBalance: text(root.bbpsBalance),
       cmsBalance: text(root.cmsBalance),
-      // JSON sends a boolean; the XML form sends the text "true".
-      isAdmin: root.isAdmin === true || text(root.isAdmin).toLowerCase() === "true",
+      isAdmin: flag(root, "isadmin"),
+      isAccountant: flag(root, "isaccountant"),
+      isSuperAccess: flag(root, "issuperaccess"),
     },
   };
 }

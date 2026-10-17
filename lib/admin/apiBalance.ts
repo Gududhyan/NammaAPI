@@ -12,6 +12,9 @@ export type ApiLevelBalance = {
   diff: number | null;
 };
 
+/** The BUL accounts (`bul_0080` …). Super-access accounts see only these. */
+export const isBulAccount = (key: string) => /^bul/i.test(key);
+
 /** "bul_0080" -> "BUL 0080". The vendor hasn't documented what the prefixes stand for. */
 export function accountLabel(key: string): string {
   return key.replace(/[_-]+/g, " ").trim().toUpperCase();
