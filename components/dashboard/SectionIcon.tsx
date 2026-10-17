@@ -57,6 +57,18 @@ const paths = {
       <path d="M8.6 15.6c.7-1.5 1.9-2.3 3.4-2.3s2.7.8 3.4 2.3" />
     </>
   ),
+  accountant: (
+    <>
+      <rect x="5" y="3" width="14" height="18" rx="2" />
+      <path d="M8.5 7.5h7M8.5 12h.01M12 12h.01M15.5 12h.01M8.5 16h.01M12 16h.01M15.5 16h.01" />
+    </>
+  ),
+  "super-access": (
+    <>
+      <circle cx="8.5" cy="14.5" r="3.5" />
+      <path d="M11 12l8-8M15.5 7.5l2.5 2.5M13.5 9.5l2 2" />
+    </>
+  ),
 } satisfies Record<DashboardSectionId, ReactNode>;
 
 export function SectionIcon({ id, className }: { id: DashboardSectionId; className?: string }) {

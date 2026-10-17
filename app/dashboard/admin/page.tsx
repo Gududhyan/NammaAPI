@@ -1,5 +1,6 @@
 import { buildMetadata } from "@/lib/metadata";
-import { AdminDashboard } from "@/components/dashboard/AdminDashboard";
+import { AdminOnly } from "@/components/dashboard/AdminOnly";
+import { AdminOverview } from "@/components/dashboard/AdminOverview";
 
 export const metadata = buildMetadata({
   title: "Admin",
@@ -8,6 +9,10 @@ export const metadata = buildMetadata({
   noIndex: true,
 });
 
-export default function AdminPage() {
-  return <AdminDashboard />;
+export default function Page() {
+  return (
+    <AdminOnly role="admin">
+      <AdminOverview />
+    </AdminOnly>
+  );
 }

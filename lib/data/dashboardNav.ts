@@ -1,6 +1,8 @@
 // Sidebar sections of the logged-in dashboard, in display order. Each one has a page at
 // /dashboard/<id> (app/dashboard/<id>/page.tsx); its icon lives in components/dashboard/SectionIcon.tsx.
 
+import type { PageRole } from "@/lib/auth/adminAccess";
+
 export const dashboardSections = [
   {
     id: "transfer",
@@ -41,16 +43,33 @@ export const dashboardSections = [
     id: "admin",
     label: "Admin",
     description: "Administrator tools for managing the platform.",
-    adminOnly: true,
+    role: "admin",
+  },
+  {
+    id: "accountant",
+    label: "Accountant",
+    description: "Platform balances, today's totals and the PG tally, for accountants.",
+    role: "accountant",
+  },
+  {
+    id: "super-access",
+    label: "Super Access",
+    description: "BUL account balances.",
+    role: "superAccess",
   },
 ] as const;
 
 export type DashboardSection = (typeof dashboardSections)[number];
 export type DashboardSectionId = DashboardSection["id"];
 
-/** Sections shown only when the logged-in account is an admin (`isAdmin` from login). */
-export function isAdminOnly(section: DashboardSection): boolean {
-  return "adminOnly" in section && section.adminOnly;
+/** The role a section is limited to (`isAdmin`, `isAccountant` or `isSuperAccess` from login), or null for everyone. */
+export function sectionRole(section: DashboardSection): PageRole | null {
+  return "role" in section ? section.role : null;
+}
+
+/** Sections shown only to accounts with a role. */
+export function isRoleOnly(section: DashboardSection): boolean {
+  return sectionRole(section) !== null;
 }
 
 export const DEFAULT_DASHBOARD_PATH = `/dashboard/${dashboardSections[0].id}`;

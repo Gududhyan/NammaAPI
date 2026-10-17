@@ -4,14 +4,16 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import { SectionIcon } from "@/components/dashboard/SectionIcon";
-import { dashboardPath, dashboardSections, isAdminOnly, type DashboardSection } from "@/lib/data/dashboardNav";
+import { dashboardPath, dashboardSections, isRoleOnly, sectionRole, type DashboardSection } from "@/lib/data/dashboardNav";
+import { hasPageRole, type AdminFlags } from "@/lib/auth/adminAccess";
 import { cn } from "@/lib/cn";
 
 type DashboardSidebarProps = {
   /** Icons only. Labels stay available to screen readers and as hover tooltips. */
   collapsed?: boolean;
   /** Shows the admin-only sections. UI only: admin features must re-check on the server. */
-  isAdmin?: boolean;
+  /** The account's role flags: each role-only page (Admin, Accountant, Super Access) shows for its flag. */
+  roles?: AdminFlags;
   /** Shows the collapse/expand button (desktop only). */
   onToggleCollapse?: () => void;
   /** Called after a link is followed (closes the mobile drawer). */
@@ -20,8 +22,8 @@ type DashboardSidebarProps = {
   onClose?: () => void;
 };
 
-const menuSections = dashboardSections.filter((s) => !isAdminOnly(s));
-const adminSections = dashboardSections.filter(isAdminOnly);
+const menuSections = dashboardSections.filter((s) => !isRoleOnly(s));
+const roleSections = dashboardSections.filter(isRoleOnly);
 
 /** Shared look for every sidebar row: navigation links and the footer actions. */
 function rowClasses(collapsed: boolean, active = false) {
@@ -91,9 +93,10 @@ function SidebarGroup({ title, sections, collapsed, pathname, onNavigate, titleA
 }
 
 /** Sidebar contents, shared by the desktop sidebar and the mobile drawer. */
-export function DashboardSidebar({ collapsed = false, isAdmin = false, onToggleCollapse, onNavigate, onClose }: DashboardSidebarProps) {
+export function DashboardSidebar({ collapsed = false, roles, onToggleCollapse, onNavigate, onClose }: DashboardSidebarProps) {
   const pathname = usePathname();
   const groupProps = { collapsed, pathname, onNavigate };
+  const adminSections = roleSections.filter((s) => hasPageRole(roles, sectionRole(s)!));
 
   const closeButton = onClose && (
     <button
@@ -113,7 +116,7 @@ export function DashboardSidebar({ collapsed = false, isAdmin = false, onToggleC
     <div className="flex h-full flex-col border-r border-white/5 bg-linear-to-b from-brand-navy to-brand-ink">
       <nav aria-label="Dashboard" className="scrollbar-dark flex-1 overflow-y-auto overflow-x-hidden px-3 py-5">
         <SidebarGroup title="Menu" sections={menuSections} titleAction={closeButton} {...groupProps} />
-        {isAdmin && adminSections.length > 0 && (
+        {adminSections.length > 0 && (
           <div className="mt-6">
             {collapsed && <div className="mx-3 mb-3 border-t border-white/8" aria-hidden="true" />}
             <SidebarGroup title="Admin" sections={adminSections} {...groupProps} />
