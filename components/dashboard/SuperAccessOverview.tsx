@@ -9,7 +9,7 @@ export function SuperAccessOverview() {
   return (
     <div className="space-y-4">
       <ApiBalanceView bulOnly />
-      <div className="min-w-0 xl:h-[max(26rem,calc(100dvh-17.5rem))]">
+      <div className="min-w-0 xl:h-[max(26rem,calc(100dvh-15.6rem))]">
         <PgTallyView />
       </div>
     </div>

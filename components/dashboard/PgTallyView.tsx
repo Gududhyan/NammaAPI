@@ -485,8 +485,15 @@ export function PgTallyView() {
                     <th scope="col" className="hidden px-2 py-2 @5xl:px-3 @5xl:table-cell">
                       Reference / Collection ID
                     </th>
+                    <th scope="col" className="hidden px-2 py-2 @5xl:px-3 text-right @6xl:table-cell">
+                      Card amount
+                    </th>
+                    <th scope="col" className="hidden px-2 py-2 @5xl:px-3 text-right @6xl:table-cell">
+                      Fee
+                    </th>
                     <th scope="col" className="px-2 py-2 @5xl:px-3 text-right">
-                      Amount
+                      <span className="@6xl:hidden">Amount</span>
+                      <span className="hidden @6xl:inline">Credited</span>
                     </th>
                     <th scope="col" className="px-2 py-2 @5xl:px-3">
                       Status
@@ -527,9 +534,15 @@ export function PgTallyView() {
                             <span className="block text-[11px] text-text-secondary">{row.collectionId}</span>
                           )}
                         </td>
+                        <td className="hidden whitespace-nowrap px-2 py-2 @5xl:px-3 text-right tabular-nums text-text-primary @6xl:table-cell">
+                          {inr(row.debitFromCard)}
+                        </td>
+                        <td className="hidden whitespace-nowrap px-2 py-2 @5xl:px-3 text-right tabular-nums text-text-secondary @6xl:table-cell">
+                          {inr(row.charges)}
+                        </td>
                         <td className="whitespace-nowrap px-2 py-2 @5xl:px-3 text-right tabular-nums">
                           <span className="block font-semibold text-text-primary">{inr(row.amount)}</span>
-                          <span className="block text-xs text-text-secondary">
+                          <span className="block text-xs text-text-secondary @6xl:hidden">
                             <span className="hidden @5xl:inline">{inr(row.debitFromCard)} − </span>
                             {inr(row.charges)} fee
                           </span>
