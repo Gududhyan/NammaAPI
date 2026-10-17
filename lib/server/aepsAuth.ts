@@ -31,9 +31,9 @@ const text = (value: unknown) =>
 
 /**
  * Logs in with the vendor's `POST GetV2LoginInfo_api?UserName=&Password=` (parameters in the query
- * string even though it's a POST). The JSON response carries the balances and `Otp`, the
- * per-request code sent to the customer by SMS — the only code accepted at login. The vendor also
- * sends a fixed `defaultOTP`; it is deliberately ignored.
+ * string even though it's a POST). The JSON response carries the balances and two codes: `Otp`
+ * (the per-request code sent to the customer by SMS) and `defaultOTP` (the account's fixed
+ * fallback). Either one is accepted at login, so both are returned.
  */
 export async function requestAepsOtp(phone: string, password: string): Promise<AepsLoginResult> {
   const result = await aepsRequest(
@@ -47,17 +47,18 @@ export async function requestAepsOtp(phone: string, password: string): Promise<A
   const body = result.body as Record<string, unknown> | null;
   const root = ((body?.["AEPSController.NPLoginResponse"] as LoginResponse | undefined) ?? body ?? {}) as LoginResponse;
   const message = text(root.MESSAGE);
-  // Only the SMS code logs in; the fixed defaultOTP is never accepted.
+  const defaultOtp = text(root.defaultOTP);
   const smsOtp = text(root.Otp);
-  const otp = OTP_PATTERN.test(smsOtp) ? smsOtp : "";
-  const acceptedOtps = otp ? [otp] : [];
+  // Either code logs in. The default one is listed first (it sets the box count); the SMS code is also valid.
+  const acceptedOtps = [defaultOtp, smsOtp].filter((code, i, all) => OTP_PATTERN.test(code) && all.indexOf(code) === i);
+  const otp = acceptedOtps[0] ?? "";
 
   if (message !== "Success") {
     return { ok: false, error: message || "Invalid phone number or password.", reason: "invalid_credentials" };
   }
 
   if (!otp) {
-    console.error("AEPS login reported Success but the response had no usable SMS Otp.");
+    console.error("AEPS login reported Success but the response had no usable Otp or defaultOTP.");
     return { ok: false, error: AEPS_UNEXPECTED_ERROR, reason: "unavailable" };
   }
 

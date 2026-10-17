@@ -10,11 +10,11 @@ import { parseDemoSession, readDemoSessionRaw, saveDemoSession, type AepsProfile
 import { DEFAULT_DASHBOARD_PATH } from "@/lib/data/dashboardNav";
 import { OtpDialog } from "./OtpDialog";
 
-/** PROTOTYPE: set to true to print the expected OTP (the SMS code) inside the modal. */
+/** PROTOTYPE: set to true to print the expected OTP (the first accepted code) inside the modal. */
 const SHOW_DEMO_OTP = false;
 
 type CredentialErrors = { phoneNumber?: string; password?: string };
-/** `otp` is the code sent to the customer by SMS — the only one that logs in. */
+/** `otp` sets the box count; `acceptedOtps` holds the default and the SMS code — either one logs in. */
 type PendingLogin = { otp: string; acceptedOtps: string[]; profile: AepsProfile };
 
 export function LoginForm() {
