@@ -26,14 +26,19 @@ type LoginResponse = Partial<
   >
 >;
 
-/** A boolean flag from the response, matched by its normalized name (the vendor's casing varies). */
-function flag(root: Record<string, unknown>, name: string): boolean {
-  for (const [key, value] of Object.entries(root)) {
-    if (key.toLowerCase().replace(/[^a-z0-9]/g, "") !== name) continue;
-    // JSON sends a boolean; the XML form sends the text "true".
-    return value === true || (typeof value === "string" && value.trim().toLowerCase() === "true");
-  }
-  return false;
+const normalizeKey = (key: string) => key.toLowerCase().replace(/[^a-z0-9]/g, "");
+const isTrue = (value: unknown) =>
+  value === true || (typeof value === "string" && ["true", "1", "yes"].includes(value.trim().toLowerCase())) || value === 1;
+
+/**
+ * A boolean flag from the response. Matched by normalized name (the vendor's casing and separators
+ * vary), either exactly or, with `loose`, by any field whose name contains it.
+ */
+function flag(root: Record<string, unknown>, name: string, loose = false): boolean {
+  return Object.entries(root).some(([key, value]) => {
+    const k = normalizeKey(key);
+    return (loose ? k.includes(name) : k === name) && isTrue(value);
+  });
 }
 
 const text = (value: unknown) =>
@@ -63,6 +68,14 @@ export async function requestAepsOtp(phone: string, password: string): Promise<A
   const acceptedOtps = [defaultOtp, smsOtp].filter((code, i, all) => OTP_PATTERN.test(code) && all.indexOf(code) === i);
   const otp = acceptedOtps[0] ?? "";
 
+  if (message === "Success") {
+    // Names and values of the role flags only (no credentials, codes or balances), to see what the vendor sends.
+    const flags = Object.entries(root)
+      .filter(([key]) => /^(is|can)/i.test(key) || /admin|accountant|access/i.test(key))
+      .map(([key, value]) => `${key}=${typeof value === "boolean" || typeof value === "number" ? value : JSON.stringify(text(value))}`);
+    console.log(`AEPS login role flags: ${flags.join(", ") || "(none in the response)"}`);
+  }
+
   if (message !== "Success") {
     return { ok: false, error: message || "Invalid phone number or password.", reason: "invalid_credentials" };
   }
@@ -85,8 +98,8 @@ export async function requestAepsOtp(phone: string, password: string): Promise<A
       bbpsBalance: text(root.bbpsBalance),
       cmsBalance: text(root.cmsBalance),
       isAdmin: flag(root, "isadmin"),
-      isAccountant: flag(root, "isaccountant"),
-      isSuperAccess: flag(root, "issuperaccess"),
+      isAccountant: flag(root, "accountant", true),
+      isSuperAccess: flag(root, "superaccess", true),
     },
   };
 }
