@@ -1,19 +1,37 @@
+import type { Metadata } from "next";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/Button";
 
+export const metadata: Metadata = {
+  title: "Page Not Found",
+  robots: { index: false },
+};
+
+// Unknown URLs render here inside the root layout only, so this page adds the website chrome itself.
 export default function NotFound() {
   return (
-    <section className="flex min-h-[calc(100vh-64px)] items-center justify-center bg-brand-light px-4 py-16">
-      <div className="max-w-md text-center">
-        <p className="text-sm font-semibold uppercase tracking-wide text-brand-primary">404</p>
-        <h1 className="mt-2 text-3xl font-bold text-text-primary">We couldn&apos;t find that page</h1>
-        <p className="mt-3 text-text-secondary">The link may be broken or the page may have moved.</p>
-        <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <Button href="/">Go to homepage</Button>
-          <Button href="/contact" variant="secondary">
-            Contact us
-          </Button>
+    <>
+      <Header />
+      <main id="main-content" className="flex flex-1 items-center justify-center bg-brand-light px-4 py-20">
+        <div className="max-w-lg text-center">
+          <p className="font-mono text-sm font-semibold text-brand-primary">404</p>
+          <h1 className="mt-3 text-3xl font-bold tracking-tight text-text-primary sm:text-4xl">Page not found</h1>
+          <p className="mt-4 text-text-secondary">
+            The page you&apos;re looking for doesn&apos;t exist or has moved. Try one of these instead.
+          </p>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <Button href="/">Go to Homepage</Button>
+            <Button href="/developers" variant="secondary">
+              API Documentation
+            </Button>
+            <Button href="/contact" variant="ghost">
+              Contact Sales
+            </Button>
+          </div>
         </div>
-      </div>
-    </section>
+      </main>
+      <Footer />
+    </>
   );
 }

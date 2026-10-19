@@ -48,6 +48,7 @@ export const primaryNav: NavItem[] = [
       { label: "Chartered Accountants", href: "/solutions#ca-firms" },
       { label: "Corporates", href: "/solutions#corporates" },
       { label: "Startups & Platforms", href: "/solutions#startups" },
+      { label: "Grocery", href: "/solutions#grocery" },
     ],
   },
   { label: "Developers", href: "/developers" },
@@ -77,10 +78,10 @@ export const footerNav = {
     { label: "CA Firms", href: "/solutions#ca-firms" },
     { label: "Corporate", href: "/solutions#corporates" },
     { label: "Startups", href: "/solutions#startups" },
+    { label: "Grocery", href: "/solutions#grocery" },
   ],
   developers: [
     { label: "API Documentation", href: "/developers" },
-    { label: "API Status", href: "/developers#status" },
     { label: "Security", href: "/security" },
   ],
   company: [

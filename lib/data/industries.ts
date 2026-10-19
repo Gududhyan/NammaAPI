@@ -1,6 +1,8 @@
 export type Industry = {
   id: string;
   name: string;
+  /** Short product/service tagline shown under the name in compact card views (e.g. the marquee). */
+  tagline?: string;
   audience: string;
   description: string;
   useCases: string[];
@@ -12,30 +14,30 @@ export const industries: Industry[] = [
     id: "education",
     name: "Education",
     audience: "For Colleges & Educational Institutions",
-    description:
-      "Handle fee collection, refunds and campus vendor and payroll payments through one connected platform.",
+    description: "Simplify fee collection, refunds and institution payments through one connected API platform.",
     useCases: [
-      "Fee collection",
-      "Refund workflows",
+      "Student fee collection",
+      "Online payment integration",
+      "Refund processing",
       "Vendor payments",
-      "Employee salaries",
-      "Bulk payments",
-      "Reconciliation",
+      "Salary & staff payments",
+      "Payment reconciliation",
     ],
   },
   {
     id: "travel",
     name: "Travel",
+    tagline: "Ticket Payment API",
     audience: "For Travel Businesses",
     description:
-      "Manage customer refunds, vendor settlements and agent commissions alongside inbound payment collection.",
+      "Make ticket and travel payments easier with API-based payment collection and settlement workflows.",
     useCases: [
+      "Ticket payment collection",
+      "Booking payment integration",
       "Customer refunds",
-      "Vendor payments",
       "Agent commissions",
-      "Bulk payouts",
-      "Payment collection",
-      "Reconciliation",
+      "Vendor payments",
+      "Payment reconciliation",
     ],
   },
   {
@@ -43,14 +45,14 @@ export const industries: Industry[] = [
     name: "Insurance",
     audience: "For Insurance Businesses",
     description:
-      "Process customer payments, claim refunds and partner payouts with clear transaction reporting.",
+      "Simplify premium collections, customer payments and refund workflows through connected payment APIs.",
     useCases: [
+      "Premium payment collection",
       "Customer payments",
       "Refund processing",
       "Partner payments",
-      "Bulk payouts",
-      "Transaction reporting",
-      "Reconciliation",
+      "Payment status tracking",
+      "Transaction reconciliation",
     ],
     note: "Payment infrastructure only — this platform does not provide insurance underwriting, claims adjudication or other regulated insurance functions.",
   },
@@ -58,14 +60,13 @@ export const industries: Industry[] = [
     id: "ca-firms",
     name: "Chartered Accountants",
     audience: "For CA Firms & Financial Professionals",
-    description:
-      "Run client payment workflows, vendor payments and payroll processing from a single dashboard.",
+    description: "Simplify client payment collection and business payment workflows through API-based infrastructure.",
     useCases: [
-      "Client payment workflows",
+      "Client payment collection",
+      "Fee collection",
       "Vendor payments",
-      "Salary processing",
-      "Bulk transfers",
-      "Reporting",
+      "Salary payments",
+      "Payment tracking",
       "Reconciliation",
     ],
   },
@@ -74,29 +75,42 @@ export const industries: Industry[] = [
     name: "Corporates",
     audience: "For Businesses & Enterprises",
     description:
-      "Automate salary runs, vendor payments and employee reimbursements with full audit visibility.",
+      "Connect everyday business payments through APIs and simplify employee, vendor and operational payment workflows.",
     useCases: [
-      "Salary processing",
       "Vendor payments",
+      "Employee salary payments",
       "Employee reimbursements",
-      "Bulk payouts",
-      "Automated workflows",
-      "Reporting",
+      "Payment approvals",
+      "Transaction tracking",
+      "Reconciliation",
     ],
   },
   {
     id: "startups",
     name: "Startups & Platforms",
     audience: "For Technology Companies",
-    description:
-      "Embed payments and payouts directly into your product with API-first infrastructure built for platforms.",
+    description: "Embed payment collection and transaction workflows directly into your product using APIs.",
     useCases: [
-      "API-based payments",
-      "Automated payouts",
-      "Partner settlements",
-      "Marketplace workflows",
-      "Payment collection",
+      "Payment API integration",
+      "Customer payment collection",
+      "Payment status updates",
+      "Refunds",
       "Webhooks",
+      "Transaction reconciliation",
+    ],
+  },
+  {
+    id: "grocery",
+    name: "Grocery",
+    tagline: "QR & API Payments",
+    audience: "For Grocery Stores & Retail Businesses",
+    description: "Make everyday retail payments easier with QR and API-based payment solutions.",
+    useCases: [
+      "QR payment collection",
+      "Supplier/vendor payments",
+      "Refund processing",
+      "Payment tracking",
+      "Reconciliation",
     ],
   },
 ];

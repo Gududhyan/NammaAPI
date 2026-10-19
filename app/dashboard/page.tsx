@@ -1,4 +1,7 @@
-// Landing page after login: intentionally empty — the shell shows the balance and navigation.
-export default function DashboardHomePage() {
-  return <h1 className="sr-only">Dashboard</h1>;
+import { redirect } from "next/navigation";
+import { DEFAULT_DASHBOARD_PATH } from "@/lib/data/dashboardNav";
+
+/** /dashboard has no page of its own: open the first sidebar section. */
+export default function DashboardIndexPage() {
+  redirect(DEFAULT_DASHBOARD_PATH);
 }
